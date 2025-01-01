@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const Header = ({text}) => <h1>{text}</h1>
 const Button = ({callback, text}) => <button onClick={callback}>{text}</button>
-const Stat   = ({value, text}) => <div>{text} {value}</div>
+const Statistic = ({value, text}) => <div>{text} {value}</div>
 
 const App = () => {
     const [good, setGood] = useState(0)
@@ -16,9 +16,14 @@ const App = () => {
             <Button callback={() => setNeutral(neutral+1)} text='neutral' />
             <Button callback={() => setBad(bad+1)} text='bad' />
             <Header text='statistics' />
-            <Stat value={good} text='good' />
-            <Stat value={neutral} text='neutral' />
-            <Stat value={bad} text='bad' />
+            <Statistic value={good} text='good' />
+            <Statistic value={neutral} text='neutral' />
+            <Statistic value={bad} text='bad' />
+            <Statistic value={good+neutral+bad} text='all' />
+            <Statistic value={(good-bad)/(good+neutral+bad)} text='average' />
+            <Statistic value={
+                `${good/(good+neutral+bad)*100} %`
+            } text='positive' />
         </div>
     )
 }
