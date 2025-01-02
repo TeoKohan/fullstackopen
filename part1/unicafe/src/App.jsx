@@ -2,22 +2,36 @@ import { useState } from 'react'
 
 const Header = ({text}) => <h1>{text}</h1>
 const Button = ({callback, text}) => <button onClick={callback}>{text}</button>
-const Statistic = ({value, text}) => <div>{text} {value}</div>
+const Statistic = ({value, text}) => <><td>{text}</td><td>{value}</td></>
 
 const Statistics = ({good, neutral, bad}) => {
     if (good + neutral + bad === 0) {
         return <p>No feedback given</p>
     } else {
-        return <> 
-            <Statistic value={good} text='good' />
-            <Statistic value={neutral} text='neutral' />
-            <Statistic value={bad} text='bad' />
-            <Statistic value={good+neutral+bad} text='all' />
-            <Statistic value={(good-bad)/(good+neutral+bad)} text='average' />
-            <Statistic value={
-                `${good/(good+neutral+bad)*100} %`
-            } text='positive' />
-        </>
+        return <table>
+            <tbody>
+                <tr>
+                <Statistic value={good} text='good' />
+                </tr>
+                <tr>
+                <Statistic value={neutral} text='neutral' />
+                </tr>
+                <tr>
+                <Statistic value={bad} text='bad' />
+                </tr>
+                <tr>
+                <Statistic value={good+neutral+bad} text='all' />
+                </tr>
+                <tr>
+                <Statistic value={(good-bad)/(good+neutral+bad)} text='average' />
+                </tr>
+                <tr>
+                <Statistic value={
+                    `${good/(good+neutral+bad)*100} %`
+                } text='positive' />
+                </tr>
+            </tbody>
+        </table>
     }
 }
 const App = () => {
