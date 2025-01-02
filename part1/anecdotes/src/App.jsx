@@ -1,7 +1,11 @@
 import { useState } from 'react'
 
+const Anecdote = ({ text, votes }) => {
+    return <><div>{text}</div><div>Has {votes} votes</div></>
+}
+
 const App = () => {
-    const anecdotes = [
+    const anecdotesText = [
         'If it hurts, do it more often.',
         'Adding manpower to a late software project makes it later!',
         'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
@@ -13,12 +17,19 @@ const App = () => {
     ]
 
     const [selected, setSelected] = useState(0)
+    const [votes, setVotes] = useState(new Array(8).fill(0))
+    const anecdotes = anecdotesText.map((x, i) => <Anecdote text={x} votes={votes[i]} />)
 
     return (
         <>
         <div>
             {anecdotes[selected]}
         </div>
+        <button onClick ={() => {
+            const newVotes = [...votes]
+            newVotes[selected] += 1
+            setVotes(newVotes)
+        }}>vote</button>
         <button onClick ={() => {setSelected(Math.floor(Math.random()*8))}}>next anecdote</button>
         </>
     )
