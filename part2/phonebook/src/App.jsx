@@ -1,4 +1,6 @@
 import { useState } from 'react'
+
+import PersonForm from './components/PersonForm'
 import Phonebook from './components/Phonebook'
 
 const App = () => {
@@ -48,15 +50,7 @@ const App = () => {
         <input value={filterString} onChange={handleFilterStringChange} />
       </div>
       <h3>Add New</h3>
-      <form onSubmit={addName}>
-        <div>
-          name: <input value={newName} onChange={handleNewNameChange} /><br/>
-          number: <input value={newNumber} onChange={handleNewNumberChange} />
-        </div>
-        <div>
-          <button type="submit" >add</button>
-        </div>
-      </form>
+      <PersonForm newName={newName} handleNewNameChange={handleNewNameChange} newNumber={newNumber} handleNewNumberChange={handleNewNumberChange} addName={addName} />
       <Phonebook 
         title={title}
         persons={persons.filter(x => x.name.toLowerCase().includes(filterString.toLowerCase()))}
