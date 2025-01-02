@@ -6,7 +6,7 @@ const Phonebook = ({ title, persons }) => {
     <>
         <h2>{title}</h2>
         <>
-            {persons.map(x => <Phonenumber key={x.name} person={x} />)}
+            {persons.map(x => <Phonenumber key={x.id} person={x} />)}
         </>
     </>
   )
