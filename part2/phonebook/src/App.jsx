@@ -40,9 +40,11 @@ const App = () => {
 
   const removeNameWithId = (id) => {
     return (e) => {
-      personService
-        .remove(id)
-        .then(data => setPersons(persons.filter(x => x.id !== id)))
+      if (window.confirm(`Confirm ${persons.find(x => x.id == id).name} deletion`)) {
+        personService
+          .remove(id)
+          .then(data => setPersons(persons.filter(x => x.id !== id)))
+      }
     }
   }
 
