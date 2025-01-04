@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 import PersonForm from './components/PersonForm'
 import Phonebook from './components/Phonebook'
@@ -13,10 +13,9 @@ const App = () => {
   const [filterString, setFilterString] = useState('')
 
   const hook = () => {
-    axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      setPersons(response.data)
+    personService.getAll()
+    .then(data => {
+      setPersons(data)
     })
   }
 
@@ -27,9 +26,11 @@ const App = () => {
     const names = persons.map(x => x.name)
 
     if (names.indexOf(newName) < 0) {
-      setPersons(persons.concat(
-        {id: persons.length+1, name: newName, number: newNumber}
-      ))
+
+      personService
+        .create({name: newName, number: newNumber})
+        .then(data => setPersons(persons.concat(data)))
+
       setNewName('')
       setNewNumber('')
     } else {
