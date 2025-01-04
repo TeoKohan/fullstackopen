@@ -38,6 +38,14 @@ const App = () => {
     }
   }
 
+  const removeNameWithId = (id) => {
+    return (e) => {
+      personService
+        .remove(id)
+        .then(data => setPersons(persons.filter(x => x.id !== id)))
+    }
+  }
+
   const handleFilterStringChange = (e) => {
     setFilterString(e.target.value)
   }
@@ -61,6 +69,7 @@ const App = () => {
       <Phonebook 
         title={title}
         persons={persons.filter(x => x.name.toLowerCase().includes(filterString.toLowerCase()))}
+        removeNameWithId={removeNameWithId}
       />
     </>
   )
