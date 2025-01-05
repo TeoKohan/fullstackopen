@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react'
 import countriesService from './services/countries'
 
-const CountryLine = ({ name }) => {
-    return <div>{name}</div>
-}
-
 const CountryFull = ({ data }) => {
     const imgStyle = {
         maxWidth: 128
@@ -26,7 +22,15 @@ const CountryFull = ({ data }) => {
     )
 }
 
-const CountryDisplay = ({ countryMatches }) => {
+const CountryLine = ({ name, showHandler }) => {
+    return (
+        <>
+            <div>{name} <button onClick={showHandler}>show</button></div>
+        </>
+    )
+}
+
+const CountryDisplay = ({ countryMatches, setFilterString }) => {
     const matchLength = countryMatches.length
     if (matchLength > 10) {
         return <div>too many matches.</div>
@@ -34,7 +38,7 @@ const CountryDisplay = ({ countryMatches }) => {
     else if (matchLength > 1 && matchLength <= 10) {
         return (
             <>
-                {countryMatches.map(country => <CountryLine key={country.cca2} name={country.name.common} />)}
+                {countryMatches.map(country => <CountryLine key={country.cca2} name={country.name.common} showHandler={() => setFilterString(country.name.common)} />)}
             </>
         )
     }
@@ -66,7 +70,7 @@ const App = () => {
         <>
             <div>find countries <input value={filterString} onChange={handleFilterStringChange}></input></div>
             <>
-                <CountryDisplay countryMatches={countryMatches} />
+                <CountryDisplay countryMatches={countryMatches} setFilterString={setFilterString} />
             </>
         </>
     )
