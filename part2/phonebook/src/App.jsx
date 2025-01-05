@@ -4,6 +4,18 @@ import personService from './services/persons'
 import PersonForm from './components/PersonForm'
 import Phonebook from './components/Phonebook'
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className='notification'>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const title = 'Numbers'
   const [persons, setPersons] = useState([])
@@ -11,6 +23,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterString, setFilterString] = useState('')
+  const [message, setMessage] = useState(null)
 
   const hook = () => {
     personService.getAll()
@@ -26,15 +39,42 @@ const App = () => {
     const names = persons.map(x => x.name)
 
     if (names.indexOf(newName) < 0) {
-
       personService
         .create({name: newName, number: newNumber})
         .then(data => setPersons(persons.concat(data)))
 
       setNewName('')
       setNewNumber('')
+
+      setMessage(`${newName} created.`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000);
     } else {
-      alert(`${newName} is already in phonebook.`)
+      const person = persons.find(x => x.name == newName)
+      if (window.confirm(`${newName} is already in he phonebook, replace phone number?`)) {
+        personService
+          .update(person.id, {...person, number: newNumber})
+          .then(data => {
+            setPersons(persons.map(x => x.id != person.id ? x : data ))
+
+            setMessage(`${newName} updated.`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000);
+          })
+          .catch(error => {
+            setPersons(persons.filter(x => x.id !== person.id))
+
+            setMessage(`${person.name} was already deleted from server`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000);
+          })
+
+        setNewName('')
+        setNewNumber('')
+      }
     }
   }
 
@@ -63,6 +103,7 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <div>filter shown with
         <input value={filterString} onChange={handleFilterStringChange} />
       </div>
