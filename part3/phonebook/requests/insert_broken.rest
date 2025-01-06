@@ -1,0 +1,23 @@
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "number": "78-11-94826744"
+}
+
+###
+
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "John Arbuckle"
+}
+
+###
+
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+}

@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
-
-const now = new Date()
+app.use(express.json())
 
 let phonebook = [
     { 
@@ -25,6 +24,13 @@ let phonebook = [
       "number": "39-23-6423122"
     }
 ]
+
+app.get('/info', (request, response) => {
+    response.send(
+        `<p>Phonebook has info for ${phonebook.length} people</p>
+         <p>${Date()}</p>`
+    )
+})
 
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
@@ -50,11 +56,26 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
-app.get('/info', (request, response) => {
-    response.send(
-        `<p>Phonebook has info for ${phonebook.length} people</p>
-         <p>${Date()}</p>`
-    )
+app.post('/api/persons', (request, response) => {
+
+    const person = request.body
+
+    if (!person.name || !person.number) {
+        return response.status(400).json({ 
+            error: 'content missing' 
+        })
+    }
+
+    if (phonebook.map(person => person.name.toLowerCase()).includes(person.name.toLowerCase())) {
+        return response.status(400).json({ 
+            error: 'name must be unique' 
+        })
+    }
+
+    person.id = Math.floor(Math.random() * 10000)
+    phonebook = phonebook.concat(person)
+
+    response.json(person)
 })
 
 const PORT = 3001
