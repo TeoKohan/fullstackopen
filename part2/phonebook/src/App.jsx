@@ -26,10 +26,11 @@ const App = () => {
   const [message, setMessage] = useState(null)
 
   const hook = () => {
-    personService.getAll()
-    .then(data => {
-      setPersons(data)
-    })
+    personService
+        .getAll()
+        .then(data => {
+            setPersons(data)
+        })
   }
 
   useEffect(hook, [])
@@ -40,21 +41,30 @@ const App = () => {
 
     if (names.indexOf(newName) < 0) {
       personService
-        .create({name: newName, number: newNumber})
-        .then(data => setPersons(persons.concat(data)))
+        .create({name: newName, phonenumber: newNumber})
+        .then(data => {
+            setPersons(persons.concat(data))
+            setNewName('')
+            setNewNumber('')
 
-      setNewName('')
-      setNewNumber('')
+            setMessage(`${newName} created.`)
+            setTimeout(() => {
+                setMessage(null)
+            }, 5000);
+        })
+        .catch(error => {
+            setMessage(`error: ${error.response.data.error}.`)
 
-      setMessage(`${newName} created.`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000);
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000);
+        })
+
     } else {
       const person = persons.find(x => x.name == newName)
       if (window.confirm(`${newName} is already in he phonebook, replace phone number?`)) {
         personService
-          .update(person.id, {...person, number: newNumber})
+          .update(person.id, {...person, phonenumber: newNumber})
           .then(data => {
             setPersons(persons.map(x => x.id != person.id ? x : data ))
 
@@ -63,7 +73,7 @@ const App = () => {
               setMessage(null)
             }, 5000);
           })
-          .catch(error => {
+          .catch( () => {
             setPersons(persons.filter(x => x.id !== person.id))
 
             setMessage(`${person.name} was already deleted from server`)
@@ -79,11 +89,11 @@ const App = () => {
   }
 
   const removeNameWithId = (id) => {
-    return (e) => {
+    return () => {
       if (window.confirm(`Confirm ${persons.find(x => x.id == id).name} deletion`)) {
         personService
           .remove(id)
-          .then(data => setPersons(persons.filter(x => x.id !== id)))
+          .then( () => setPersons(persons.filter(x => x.id !== id)))
       }
     }
   }
